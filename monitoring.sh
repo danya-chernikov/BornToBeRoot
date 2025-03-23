@@ -12,17 +12,23 @@ mem_avail=$(cat /proc/meminfo | grep -oE 'MemAvailable:[[:space:]]*[0-9]+[[:spac
 #echo "mem_total=$mem_total=$((mem_total/1024))kB"
 #echo "mem_avail=$mem_avail=$((mem_avail/1024))kB"
 mem_occup=$((mem_total/1024 - mem_avail/1024))
-usage_percent=$((100 - mem_avail*100/mem_total))
+mem_usage_percent=$((100 - mem_avail*100/mem_total))
 
-echo "#Memory Usage: "$mem_occup"/"$((mem_total/1024))"MB ($usage_percent%))"
+echo "#Memory Usage: "$mem_occup"/"$((mem_total/1024))"MB ($mem_usage_percent%))"
 
-echo "#Disk Usage: "
+# Let's evaluate the disk usage space
+root_part=$(df -h -BM | grep -oE '^/dev/.+/$')
+disk_size=$(echo $root_part | awk '{print $2}' | grep -oE '[0-9]+')
+disk_used=$(echo $root_part | awk '{print $3}' | grep -oE '[0-9]+')
+disk_usage_percent=$((disk_used*100/disk_size))
+
+echo "#Disk Usage: "$disk_used"MB/$((disk_size/1024))GB ($disk_usage_percent%)"
 
 echo "#CPU load: "
 
 echo "#Last boot: $(who -b)"
 
-echo "#LVM use: $(if [ -z "$(cat /etc/fstab | grep -m 1 'mapper')" ]; then echo 'no'; else echo 'yes'; fi)"
+echo "#LVM use: $(if [ -z "$(df -h | grep -m 1 'mapper')" ]; then echo 'no'; else echo 'yes'; fi)"
 
 echo "#TCP Connections : $(ss -t state established | grep -v 'Recv-Q' | wc -l)"
 
