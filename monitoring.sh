@@ -26,15 +26,16 @@ disk_usage_percent=$((disk_used*100/disk_size))
 
 echo "#Disk usage: "$disk_used"MB/$((disk_size/1024))GB ($disk_usage_percent%)"
 
-cpu_idle=$(iostat -c | grep -A 1 user | grep -v user | awk '{print $6}')
-cpu_idle_percent=$(echo "scale=2; 100.0 - $cpu_idle" | bc)
-echo "#CPU load: $((100 - cpu_idle))%"
+#cpu_idle=$(iostat -c | grep -A 1 user | grep -v user | awk '{print $6}')
+#cpu_idle_percent=$(echo "scale=2; 100.0 - $cpu_idle" | bc)
+#echo "#CPU load: $((100 - cpu_idle))%"
+echo "#CPU load: "$[100-$(vmstat 1 2|tail -1|awk '{print $15}')]"%"
 
 echo "#Last boot: $(who -b 2> /dev/null | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}[[:space:]]+[0-9]{2}:[0-9]{2}' 2> /dev/null)"
 
 echo "#LVM use: $(if [ -z "$(df -h 2> /dev/null | grep -m 1 'mapper' 2> /dev/null)" ]; then echo 'no'; else echo 'yes'; fi)"
 
-echo "#TCP connections : $(ss -t state established 2> /dev/null | grep -v 'Recv-Q' 2> /dev/null | wc -l 2> /dev/null)"
+echo "#TCP connections: $(ss -t state established 2> /dev/null | grep -v 'Recv-Q' 2> /dev/null | wc -l 2> /dev/null)"
 
 echo "#User log: $(who 2> /dev/null | wc -l 2> /dev/null)"
 
