@@ -2,11 +2,18 @@
 
 echo "#Architecture: $(uname -a)"
 
-echo "#CPU physical : "
+echo "#CPU physical : $(lscpu | grep -oE 'Core\(s\) per socket:[[:space:]]*[0-9]+' | grep -oE '[0-9]+')"
 
-echo "#vCPU : "
+echo "#vCPU : $(lscpu | grep -Eo '^CPU\(s\):[[:space:]]*[0-9]+' | grep -Eo '[0-9]+')"
 
-echo "#Memory Usage: "
+# Let's evaluate the memory usage
+mem_total=$(cat /proc/meminfo | grep -oE 'MemTotal:[[:space:]]*[0-9]+[[:space:]]*kB' | grep -oE '[0-9]+')
+mem_avail=$(cat /proc/meminfo | grep -oE 'MemAvailable:[[:space:]]*[0-9]+[[:space:]]*kB' | grep -oE '[0-9]+')
+echo "mem_total=$mem_total=$((mem_total/(1024*1024)))"
+echo "mem_avail=$mem_avail"
+mem_occup=$((mem_total/(1024*1024) - mem_avail/(1024*1024)))
+
+#echo "#Memory Usage: "$mem_occup"/"$mem_total"MB ($((100 - (mem_avail/mem_total)*100))%)"
 
 echo "#Disk Usage: "
 
@@ -39,7 +46,7 @@ do
 	fi
 done
 
-# Also it makes sence to get our external IP address
+# Also it makes sense to get our external IP address
 web_cnt=$(wget https://showmyip.com -q -O -)
 
 ext_ip=$(echo "$web_cnt" | grep -oE '(<h2[[:space:]]+id[[:space:]]?=[[:space:]]?"ipv4">)([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})')
