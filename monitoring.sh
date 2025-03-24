@@ -52,7 +52,7 @@ if [[ -n "$ext_ip" ]]; then
 	echo -n "external IP: $ext_ip | "
 fi
 
-# Trying to determine all network interfaces present in the server and their IP and MAC addresses
+# Trying to determine all network interfaces present on the server and their IP and MAC addresses
 ip address 2> /dev/null | while IFS= read -r line
 do
 	if [[ "$line" =~ (^[0-9]{1,6}:[[:space:]]+)(eth[0-9]{1,5}|enp[0-9]{1,3}s[0-9]{1,2}|wlan[0-9]{1,5}|wlp[0-9]{1,3}s[0-9]{1,2}|(wwan|tun|wg|ppp|tap|veth|macvtap|macvlan|bridge|br|bond)[0-9]{1,5}) ]]; then
@@ -68,3 +68,5 @@ do
 		fi
 	fi
 done
+
+exit
