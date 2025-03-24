@@ -39,7 +39,7 @@ echo "#TCP connections: $(ss -t state established 2> /dev/null | grep -v 'Recv-Q
 
 echo "#User log: $(who 2> /dev/null | wc -l 2> /dev/null)"
 
-echo "#Sudo: $(sudo ls /var/log/sudo 2> /dev/null | wc -l 2> /dev/null) cmd"
+echo "#Sudo: $(ls /var/log/sudo 2> /dev/null | wc -l 2> /dev/null) cmd"
 
 echo -n "#Network: "
 
