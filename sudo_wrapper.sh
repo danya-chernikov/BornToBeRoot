@@ -10,7 +10,7 @@ ctrlc_handler() {
 }
 
 # Create a unique log file for each logged command
-log_file="$LOG_DIR/$(date +%Y%m%d_%H%M%S)_$(whoami)_$(echo "$1").log"
+log_file="$LOG_DIR/$(date +%Y%m%d_%H%M%S)_$(whoami)_$(echo "$1" | sed 's/[^a-zA-Z0-9_-]//g').log"
 
 # Log the command
 echo "Command: $@" | /usr/bin/sudo tee "$log_file" > /dev/null
