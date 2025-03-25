@@ -11,8 +11,6 @@ echo "#vCPU: $(lscpu 2> /dev/null | grep -Eo '^CPU\(s\):[[:space:]]*[0-9]+' 2> /
 # Let's evaluate the memory usage
 mem_total=$(cat /proc/meminfo 2> /dev/null | grep -oE 'MemTotal:[[:space:]]*[0-9]+[[:space:]]*kB' 2> /dev/null | grep -oE '[0-9]+' 2> /dev/null)
 mem_avail=$(cat /proc/meminfo 2> /dev/null | grep -oE 'MemAvailable:[[:space:]]*[0-9]+[[:space:]]*kB' 2> /dev/null | grep -oE '[0-9]+' 2> /dev/null)
-#echo "mem_total=$mem_total=$((mem_total/1024))kB"
-#echo "mem_avail=$mem_avail=$((mem_avail/1024))kB"
 mem_occup=$((mem_total/1024 - mem_avail/1024))
 mem_usage_percent=$((100 - mem_avail*100/mem_total))
 
